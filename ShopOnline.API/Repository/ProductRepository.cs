@@ -20,12 +20,14 @@ namespace ShopOnline.API.Repository
 
         public Task<ProductCategory> GetCategory(int id)
         {
-            throw new NotImplementedException();
+            var category = _db.ProductCategories.SingleOrDefaultAsync(u => u.Id == id);
+            return category;
         }
 
-        public Task<Product> GetItem(int id)
+        public async Task<Product> GetItem(int id)
         {
-            throw new NotImplementedException();
+            var product = await _db.Products.FindAsync(id);
+            return product;
         }
 
         public async Task<IEnumerable<Product>> GetItems()
