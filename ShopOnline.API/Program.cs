@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using ShopOnline.API.Data;
+using ShopOnline.API.Repository;
+using ShopOnline.API.Repository.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionStrings")));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -19,7 +23,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(policy => 
+    policy.WithOrigins("https://localhost:7236","http://localhost:7236")
+    .AllowAnyMethod()
+    .WithHeaders(HeaderNames.ContentType));
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
